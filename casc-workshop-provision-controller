@@ -6,8 +6,9 @@ pipeline {
     eventTrigger jmespathQuery("controller.action=='provision'")
   }
   environment {
-    GITHUB_ORGANIZATION = event.github.organization.toString().toLowerCase().replaceAll(" ", "-")
+    GITHUB_ORGANIZATION = event.github.organization.toString().replaceAll(" ", "-")
     GITHUB_REPOSITORY = event.github.repository.toString.toLowerCase()
+    CONTROLLER_FOLDER = GITHUB_ORGANIZATION.toLowerCase()
     BUNDLE_ID = "${GITHUB_ORGANIZATION}-${GITHUB_REPOSITORY}"
     AVAILABILITY_PATTERN =  "${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}"
   }
@@ -22,7 +23,7 @@ pipeline {
           sh '''
             alias cli='java -jar jenkins-cli.jar -s http://cjoc/cjoc/ -webSocket -auth $JENKINS_CLI_USR:$JENKINS_CLI_PSW'
             cli casc-bundle-set-availability-pattern --bundle-id $BUNDLE_ID --availability-pattern $AVAILABILITY_PATTERN
-            cli groovy =<./groovy/casc-workshop-provision-controller-with-casc.groovy $GITHUB_ORGANIZATION $GITHUB_REPOSITORY $BUNDLE_ID
+            cli groovy =<./groovy/casc-workshop-provision-controller-with-casc.groovy $GITHUB_ORGANIZATION $GITHUB_REPOSITORY $CONTROLLER_FOLDER
           '''
         }
       }
