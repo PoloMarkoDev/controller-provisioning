@@ -2,6 +2,7 @@
 import jenkins.model.*
 import hudson.*
 import hudson.model.*
+import io.fabric8.kubernetes.client.utils.Serialization
 import com.cloudbees.hudson.plugins.folder.*
 import com.cloudbees.masterprovisioning.kubernetes.KubernetesImagePullSecret
 import com.cloudbees.masterprovisioning.kubernetes.KubernetesMasterProvisioning
