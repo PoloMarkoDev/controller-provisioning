@@ -9,11 +9,11 @@ import com.cloudbees.opscenter.server.properties.ConnectedMasterOwnerProperty
 import java.util.logging.Logger
 
 Logger logger = Logger.getLogger("casc-workshop-provision-controller-with-casc.groovy")
+String gitHubOrganization = this.args[0]
+String controllerName = this.args[1] 
 
-String controllerFolderName = "REPLACE_FOLDER_NAME"
+String controllerFolderName = this.args[2]
 logger.info("controllerFolderName is ${controllerFolderName}")
-
-String controllerName = "REPLACE_CONTROLLER_NAME" 
 String controllerDefinitionYaml = """
 provisioning:
   cpus: 1
@@ -37,7 +37,7 @@ provisioning:
             - name: "SECRETS"
               value: "/var/jenkins_home/jcasc_secrets"
             - name: "GITHUB_ORGANIZATION"
-              value: "REPLACE_GITHUB_ORG"
+              value: "/${gitHubOrganization}"
             volumeMounts:
             - name: "jcasc-secrets"
               mountPath: "/var/jenkins_home/jcasc_secrets"
