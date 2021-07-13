@@ -19,6 +19,11 @@ String gitHubOrganization = this.args[0]
 String controllerName = this.args[1] 
 
 String controllerFolderName = this.args[2]
+def controllerFolder = Jenkins.instance.getItem(controllerFolderName)
+if (controllerFolder == null) {
+    logger.info("$controllerFolderName Folder does not exist so creating")
+    controllerFolder = Jenkins.instance.createProject(Folder.class, controllerFolderName);
+}
 logger.info("controllerFolderName is ${controllerFolderName}")
 String controllerDefinitionYaml = """
 provisioning:
