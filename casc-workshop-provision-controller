@@ -5,15 +5,15 @@ pipeline {
   triggers {
     eventTrigger jmespathQuery("action=='provision'")
   }
-  environment {
-    GITHUB_ORGANIZATION = event.github.organization.toString().replaceAll(" ", "-")
-    GITHUB_REPOSITORY = event.github.repository.toString.toLowerCase()
-    CONTROLLER_FOLDER = GITHUB_ORGANIZATION.toLowerCase()
-    BUNDLE_ID = "${GITHUB_ORGANIZATION}-${GITHUB_REPOSITORY}"
-    AVAILABILITY_PATTERN =  "${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}"
-  }
   stages {
     stage('Provision Managed Controller') {
+      environment {
+        GITHUB_ORGANIZATION = event.github.organization.toString().replaceAll(" ", "-")
+        GITHUB_REPOSITORY = event.github.repository.toString.toLowerCase()
+        CONTROLLER_FOLDER = GITHUB_ORGANIZATION.toLowerCase()
+        BUNDLE_ID = "${GITHUB_ORGANIZATION}-${GITHUB_REPOSITORY}"
+        AVAILABILITY_PATTERN =  "${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}"
+      }
       when {
         beforeAgent true
         triggeredBy 'EventTriggerCause'
