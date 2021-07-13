@@ -1,5 +1,7 @@
 //only runs on CJOC
 import jenkins.model.*
+import hudson.*
+import hudson.model.*
 import com.cloudbees.hudson.plugins.folder.*
 import com.cloudbees.masterprovisioning.kubernetes.KubernetesImagePullSecret
 import com.cloudbees.masterprovisioning.kubernetes.KubernetesMasterProvisioning
