@@ -22,7 +22,7 @@ pipeline {
           sh '''
             alias cli='java -jar jenkins-cli.jar -s http://cjoc/cjoc/ -webSocket -auth $JENKINS_CLI_USR:$JENKINS_CLI_PSW'
             cli casc-bundle-set-availability-pattern --bundle-id $BUNDLE_ID --availability-pattern $AVAILABILITY_PATTERN
-            cli groovy =<./groovy/casc-workshop-provision-controller-with-casc.groovy
+            cli groovy =<./groovy/casc-workshop-provision-controller-with-casc.groovy $GITHUB_ORGANIZATION $GITHUB_REPOSITORY $BUNDLE_ID
           '''
         }
       }
