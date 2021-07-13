@@ -12,7 +12,7 @@ pipeline {
         GITHUB_REPOSITORY = event.github.repository.toString.toLowerCase()
         CONTROLLER_FOLDER = GITHUB_ORGANIZATION.toLowerCase()
         BUNDLE_ID = "${GITHUB_ORGANIZATION}-${GITHUB_REPOSITORY}"
-        AVAILABILITY_PATTERN =  "${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}"
+        AVAILABILITY_PATTERN = GITHUB_ORGANIZATION + "/" + GITHUB_REPOSITORY
       }
       when {
         beforeAgent true
