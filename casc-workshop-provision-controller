@@ -21,7 +21,7 @@ pipeline {
         withCredentials([usernamePassword(credentialsId: "admin-cli-token", usernameVariable: 'JENKINS_CLI_USR', passwordVariable: 'JENKINS_CLI_PSW')]) {
           sh '''
             alias cli='java -jar jenkins-cli.jar -s http://cjoc/cjoc/ -webSocket -auth $JENKINS_CLI_USR:$JENKINS_CLI_PSW'
-            cli casc-bundle-set-availability-pattern --bundle-id $BUNDLE_ID --availability-pattern "folder1/.*"
+            cli casc-bundle-set-availability-pattern --bundle-id $BUNDLE_ID --availability-pattern $AVAILABILITY_PATTERN
             cli groovy =<./groovy/casc-workshop-provision-controller-with-casc.groovy
           '''
         }
