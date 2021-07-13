@@ -1,5 +1,4 @@
 def event = currentBuild.getBuildCauses()[0].event
-library 'pipeline-library'
 pipeline {
   agent  { label 'default-jnlp' }
   options { timeout(time: 10, unit: 'MINUTES') }
