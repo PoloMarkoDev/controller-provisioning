@@ -24,6 +24,9 @@ pipeline {
         triggeredBy 'EventTriggerCause'
       }
       steps {
+      
+        sh "curl -O http://cjoc/cjoc/jnlpJars/jenkins-cli.jar"
+        
         withCredentials([usernamePassword(credentialsId: "admin-cli-token", usernameVariable: 'JENKINS_CLI_USR', passwordVariable: 'JENKINS_CLI_PSW')]) {
           sh '''
             alias cli='java -jar jenkins-cli.jar -s http://cjoc/cjoc/ -webSocket -auth $JENKINS_CLI_USR:$JENKINS_CLI_PSW'
@@ -31,6 +34,7 @@ pipeline {
             cli groovy =<./groovy/casc-workshop-provision-controller-with-casc.groovy $GITHUB_ORGANIZATION $GITHUB_REPOSITORY $CONTROLLER_FOLDER
           '''
         }
+        
       }
     }
   }
