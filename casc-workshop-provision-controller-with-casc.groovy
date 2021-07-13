@@ -5,6 +5,8 @@ import com.cloudbees.masterprovisioning.kubernetes.KubernetesMasterProvisioning
 import com.cloudbees.opscenter.server.model.ManagedMaster
 import com.cloudbees.opscenter.server.properties.ConnectedMasterLicenseServerProperty
 import com.cloudbees.opscenter.server.properties.ConnectedMasterOwnerProperty
+import com.cloudbees.opscenter.server.casc.config.ConnectedMasterCascProperty
+import com.cloudbees.opscenter.server.casc.config.ConnectedMasterTokenProperty
 
 import java.util.logging.Logger
 
