@@ -10,6 +10,7 @@ pipeline {
       agent  { label 'default-jnlp' }
       environment {
         PROVISION_SECRET = credentials('casc-workshop-controller-provision-secret')
+        ADMIN_CLI_TOKEN = credentials('admin-cli-token')
         GITHUB_ORGANIZATION = event.github.organization.toString().replaceAll(" ", "-")
         GITHUB_REPOSITORY = event.github.repository.toString().toLowerCase()
         CONTROLLER_FOLDER = GITHUB_ORGANIZATION.toLowerCase()
@@ -24,14 +25,12 @@ pipeline {
         }
       }
       steps {
-        withCredentials([usernamePassword(credentialsId: "admin-cli-token", usernameVariable: 'JENKINS_CLI_USR', passwordVariable: 'JENKINS_CLI_PSW')]) {
-          sh '''
-            curl -O http://cjoc/cjoc/jnlpJars/jenkins-cli.jar
-            alias cli='java -jar jenkins-cli.jar -s http://cjoc/cjoc/ -webSocket -auth $JENKINS_CLI_USR:$JENKINS_CLI_PSW'
-            cli casc-bundle-set-availability-pattern --bundle-id $BUNDLE_ID --availability-pattern $AVAILABILITY_PATTERN
-            cli groovy =<casc-workshop-provision-controller-with-casc.groovy $GITHUB_ORGANIZATION $GITHUB_REPOSITORY $CONTROLLER_FOLDER
-          '''
-        }
+        sh '''
+          curl -O http://cjoc/cjoc/jnlpJars/jenkins-cli.jar
+          alias cli='java -jar jenkins-cli.jar -s http://cjoc/cjoc/ -webSocket -auth $ADMIN_CLI_TOKEN_USR:$ADMIN_CLI_TOKEN_PSW'
+          cli casc-bundle-set-availability-pattern --bundle-id $BUNDLE_ID --availability-pattern $AVAILABILITY_PATTERN
+          cli groovy =<casc-workshop-provision-controller-with-casc.groovy $GITHUB_ORGANIZATION $GITHUB_REPOSITORY $CONTROLLER_FOLDER
+        '''
       }
     }
   }
