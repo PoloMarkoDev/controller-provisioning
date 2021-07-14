@@ -1,24 +1,29 @@
+def event = currentBuild.getBuildCauses()[0].event
 pipeline {
   agent  { label 'default-jnlp' }
   options { timeout(time: 10, unit: 'MINUTES') }
   environment {
-    PROVISION_SECRET = credentials('casc-workshop-controller-provision-secret')
   }
   triggers {
-    eventTrigger jmespathQuery("controller.action=='provision' && controller.action.secret=='${PROVISION_SECRET}'")
+    eventTrigger jmespathQuery("controller.action=='provision'")
   }
   stages {
     stage('Provision Managed Controller') {
       environment {
-        GITHUB_ORGANIZATION = currentBuild.getBuildCauses()[0].event.github.organization.toString().replaceAll(" ", "-")
-        GITHUB_REPOSITORY = currentBuild.getBuildCauses()[0].event.github.repository.toString().toLowerCase()
+        PROVISION_SECRET = credentials('casc-workshop-controller-provision-secret')
+        EVENT_SECRET = event.controller.action.secret.toString()
+        GITHUB_ORGANIZATION = event.github.organization.toString().replaceAll(" ", "-")
+        GITHUB_REPOSITORY = event.github.repository.toString().toLowerCase()
         CONTROLLER_FOLDER = GITHUB_ORGANIZATION.toLowerCase()
         BUNDLE_ID = "${GITHUB_ORGANIZATION}-${GITHUB_REPOSITORY}"
         AVAILABILITY_PATTERN = "${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}"
       }
       when {
         beforeAgent true
-        triggeredBy 'EventTriggerCause'
+        allOf {
+          triggeredBy 'EventTriggerCause'
+          equals expected: $PROVISION_SECRET, actual: $EVENT_SECRET
+        }
       }
       steps {
         withCredentials([usernamePassword(credentialsId: "admin-cli-token", usernameVariable: 'JENKINS_CLI_USR', passwordVariable: 'JENKINS_CLI_PSW')]) {
