@@ -10,7 +10,6 @@ pipeline {
       agent  { label 'default-jnlp' }
       environment {
         PROVISION_SECRET = credentials('casc-workshop-controller-provision-secret')
-        EVENT_SECRET = event.controller.action.secret.toString()
         GITHUB_ORGANIZATION = event.github.organization.toString().replaceAll(" ", "-")
         GITHUB_REPOSITORY = event.github.repository.toString().toLowerCase()
         CONTROLLER_FOLDER = GITHUB_ORGANIZATION.toLowerCase()
@@ -21,7 +20,7 @@ pipeline {
         beforeAgent true
         allOf {
           triggeredBy 'EventTriggerCause'
-          environment name: 'PROVISION_SECRET', value: "${EVENT_SECRET}"
+          environment name: 'PROVISION_SECRET', value: event.controller.action.secret.toString()
         }
       }
       steps {
