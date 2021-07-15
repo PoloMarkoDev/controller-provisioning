@@ -10,7 +10,7 @@ pipeline {
     stage('Provision Managed Controller') {
       agent  { label 'default-jnlp' }
       environment {
-        //PROVISION_SECRET = credentials('casc-workshop-controller-provision-secret')
+        PROVISION_SECRET = credentials('casc-workshop-controller-provision-secret')
         ADMIN_CLI_TOKEN = credentials('admin-cli-token')
         GITHUB_ORGANIZATION = event.github.organization.toString().replaceAll(" ", "-")
         GITHUB_REPOSITORY = event.github.repository.toString().toLowerCase()
@@ -22,11 +22,10 @@ pipeline {
         beforeAgent true
         allOf {
           triggeredBy 'EventTriggerCause'
-          //environment name: 'PROVISION_SECRET', value: publishedSecret
+          environment name: 'PROVISION_SECRET', value: "$publishedSecret"
         }
       }
       steps {
-        echo "$publishedSecret"
         sh '''
           curl -O http://cjoc/cjoc/jnlpJars/jenkins-cli.jar
           alias cli='java -jar jenkins-cli.jar -s http://cjoc/cjoc/ -webSocket -auth $ADMIN_CLI_TOKEN_USR:$ADMIN_CLI_TOKEN_PSW'
