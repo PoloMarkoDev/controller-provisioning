@@ -22,11 +22,10 @@ pipeline {
         beforeAgent true
         allOf {
           triggeredBy 'EventTriggerCause'
-          //environment name: 'PROVISION_SECRET', value: 'PUBLISH_EVENT_SECRET'
+          environment name: 'PROVISION_SECRET', value: 'PUBLISH_EVENT_SECRET'
         }
       }
       steps {
-        echo "${PUBLISH_EVENT_SECRET}"
         sh '''
           curl -O http://cjoc/cjoc/jnlpJars/jenkins-cli.jar
           alias cli='java -jar jenkins-cli.jar -s http://cjoc/cjoc/ -webSocket -auth $ADMIN_CLI_TOKEN_USR:$ADMIN_CLI_TOKEN_PSW'
