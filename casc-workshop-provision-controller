@@ -22,7 +22,7 @@ pipeline {
         beforeAgent true
         allOf {
           triggeredBy 'EventTriggerCause'
-          equals expected: "${PROVISION_SECRET}", actual: "${PUBLISH_EVENT_SECRET}"
+          environment name: 'PUBLISH_EVENT_SECRET', value: "${PROVISION_SECRET}"
         }
       }
       steps {
