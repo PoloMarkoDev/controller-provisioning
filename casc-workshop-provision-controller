@@ -22,7 +22,7 @@ pipeline {
       }
       when {
         triggeredBy 'EventTriggerCause'
-        environment name: 'PUBLISHED_SECRET', value: $PROVISION_SECRET
+        environment name: 'PROVISION_SECRET', value: PUBLISHED_SECRET
       }
       steps {
         sh '''
