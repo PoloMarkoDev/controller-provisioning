@@ -22,7 +22,7 @@ pipeline {
         beforeAgent true
         allOf {
           triggeredBy 'EventTriggerCause'
-          equals expected: PROVISION_SECRET, actual: PUBLISH_EVENT_SECRET
+          equals expected: $PROVISION_SECRET, actual: $PUBLISH_EVENT_SECRET
         }
       }
       steps {
