@@ -18,11 +18,8 @@ pipeline {
         PUBLISHED_SECRET = event.secret.toString()
       }
       when {
-        beforeAgent true
-        allOf {
-          triggeredBy 'EventTriggerCause'
-          environment name: 'PUBLISHED_SECRET', value: "${params.provisionSecret}"
-        }
+        triggeredBy 'EventTriggerCause'
+        environment name: 'PUBLISHED_SECRET', value: "${params.provisionSecret}"
       }
       steps {
         sh '''
