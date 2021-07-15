@@ -2,6 +2,7 @@ def event = currentBuild.getBuildCauses()[0].event
 pipeline {
   agent none
   environment {
+    PROVISION_SECRET = credentials('casc-workshop-controller-provision-secret')
     PUBLISHED_SECRET = event.secret.toString()
   }
   options { timeout(time: 10, unit: 'MINUTES') }
@@ -21,10 +22,9 @@ pipeline {
       }
       when {
         triggeredBy 'EventTriggerCause'
-        //environment name: 'PUBLISHED_SECRET', value: params.provisionSecret
+        environment name: 'PUBLISHED_SECRET', value: "${PROVISION_SECRET}"
       }
       steps {
-        echo "PUBLISHED_SECRET=${PUBLISHED_SECRET}"
         sh '''
           curl -O http://cjoc/cjoc/jnlpJars/jenkins-cli.jar
           alias cli='java -jar jenkins-cli.jar -s http://cjoc/cjoc/ -webSocket -auth $ADMIN_CLI_TOKEN_USR:$ADMIN_CLI_TOKEN_PSW'
