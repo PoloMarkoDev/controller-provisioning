@@ -21,7 +21,7 @@ pipeline {
         beforeAgent true
         allOf {
           triggeredBy 'EventTriggerCause'
-          environment name: 'PUBLISHED_SECRET', value: params.provisionSecret
+          environment name: 'PUBLISHED_SECRET', value: "${params.provisionSecret}"
         }
       }
       steps {
