@@ -1,6 +1,9 @@
 def event = currentBuild.getBuildCauses()[0].event
 pipeline {
   agent none
+  environment {
+    PUBLISHED_SECRET = event.secret.toString()
+  }
   options { timeout(time: 10, unit: 'MINUTES') }
   triggers {
     eventTrigger jmespathQuery("controller.action=='provision'")
@@ -15,7 +18,6 @@ pipeline {
         CONTROLLER_FOLDER = GITHUB_ORGANIZATION.toLowerCase()
         BUNDLE_ID = "${CONTROLLER_FOLDER}-${GITHUB_REPOSITORY}"
         AVAILABILITY_PATTERN = "${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}"
-        PUBLISHED_SECRET = event.secret.toString()
       }
       when {
         triggeredBy 'EventTriggerCause'
