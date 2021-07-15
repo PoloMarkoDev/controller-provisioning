@@ -2,15 +2,17 @@ def event = currentBuild.getBuildCauses()[0].event
 def publishedSecret = event.secret.toString()
 pipeline {
   agent none
+  environment {
+    PROVISION_SECRET = credentials('casc-workshop-controller-provision-secret')
+  }
   options { timeout(time: 10, unit: 'MINUTES') }
   triggers {
-    eventTrigger jmespathQuery("controller.action=='provision'")
+    eventTrigger jmespathQuery("controller.action=='provision' && secret=='$PROVISION_SECRET'")
   }
   stages {
     stage('Provision Managed Controller') {
       agent  { label 'default-jnlp' }
       environment {
-        PROVISION_SECRET = credentials('casc-workshop-controller-provision-secret')
         ADMIN_CLI_TOKEN = credentials('admin-cli-token')
         GITHUB_ORGANIZATION = event.github.organization.toString().replaceAll(" ", "-")
         GITHUB_REPOSITORY = event.github.repository.toString().toLowerCase()
@@ -20,10 +22,7 @@ pipeline {
       }
       when {
         beforeAgent true
-        allOf {
-          triggeredBy 'EventTriggerCause'
-          environment name: 'PROVISION_SECRET', value: "$publishedSecret"
-        }
+        triggeredBy 'EventTriggerCause'
       }
       steps {
         sh '''
