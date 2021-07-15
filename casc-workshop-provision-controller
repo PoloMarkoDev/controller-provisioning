@@ -14,14 +14,14 @@ pipeline {
         GITHUB_ORGANIZATION = event.github.organization.toString().replaceAll(" ", "-")
         GITHUB_REPOSITORY = event.github.repository.toString().toLowerCase()
         CONTROLLER_FOLDER = GITHUB_ORGANIZATION.toLowerCase()
-        BUNDLE_ID = "${GITHUB_ORGANIZATION}-${GITHUB_REPOSITORY}"
+        BUNDLE_ID = "${CONTROLLER_FOLDER}-${GITHUB_REPOSITORY}"
         AVAILABILITY_PATTERN = "${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}"
       }
       when {
         beforeAgent true
         allOf {
           triggeredBy 'EventTriggerCause'
-          environment name: 'PROVISION_SECRET', value: event.controller.action.secret.toString()
+          environment name: 'PROVISION_SECRET', value: event.secret.toString()
         }
       }
       steps {
