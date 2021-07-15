@@ -1,5 +1,4 @@
 def event = currentBuild.getBuildCauses()[0].event
-def publishedSecret = event.secret.toString()
 pipeline {
   agent none
   environment {
@@ -7,7 +6,7 @@ pipeline {
   }
   options { timeout(time: 10, unit: 'MINUTES') }
   triggers {
-    eventTrigger jmespathQuery("controller.action=='provision' && secret=='$PROVISION_SECRET'")
+    eventTrigger jmespathQuery("controller.action=='provision'")
   }
   stages {
     stage('Provision Managed Controller') {
@@ -19,10 +18,14 @@ pipeline {
         CONTROLLER_FOLDER = GITHUB_ORGANIZATION.toLowerCase()
         BUNDLE_ID = "${CONTROLLER_FOLDER}-${GITHUB_REPOSITORY}"
         AVAILABILITY_PATTERN = "${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}"
+        PUBLISHED_SECRET = event.secret.toString()
       }
       when {
         beforeAgent true
-        triggeredBy 'EventTriggerCause'
+        allOf {
+          triggeredBy 'EventTriggerCause'
+          environment name: 'PUBLISHED_SECRET', value: params.provisionSecret
+        }
       }
       steps {
         sh '''
