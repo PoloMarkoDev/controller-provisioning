@@ -1,3 +1,4 @@
+#groovy
 def event = currentBuild.getBuildCauses()[0].event
 pipeline {
   agent none
