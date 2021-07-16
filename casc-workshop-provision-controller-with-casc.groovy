@@ -16,9 +16,10 @@ import java.util.logging.Logger
 
 Logger logger = Logger.getLogger("casc-workshop-provision-controller-with-casc.groovy")
 String gitHubOrganization = this.args[0]
-String controllerName = this.args[1] 
+String gitHubUser = this.args[1]
+String controllerName = this.args[2] 
 
-String controllerFolderName = this.args[2]
+String controllerFolderName = this.args[3]
 def controllerFolder = Jenkins.instance.getItem(controllerFolderName)
 if (controllerFolder == null) {
     logger.info("$controllerFolderName Folder does not exist so creating")
@@ -49,6 +50,8 @@ provisioning:
               value: "/var/jenkins_home/jcasc_secrets"
             - name: "GITHUB_ORGANIZATION"
               value: "/${gitHubOrganization}"
+            - name: "GITHUB_USER"
+              value: "/${gitHubUser}"
             volumeMounts:
             - name: "jcasc-secrets"
               mountPath: "/var/jenkins_home/jcasc_secrets"
