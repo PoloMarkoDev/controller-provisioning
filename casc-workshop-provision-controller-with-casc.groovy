@@ -31,6 +31,7 @@ provisioning:
   cpus: 1
   disk: 20
   memory: 4000
+  domain: "${gitHubUser}-${controllerName}"
   yaml: |
     kind: "StatefulSet"
     spec:
