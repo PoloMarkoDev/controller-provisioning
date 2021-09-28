@@ -26,7 +26,7 @@ String controllerFolderName = this.args[3]
 def controllerFolder = workshopFolder.getItem(controllerFolderName)
 if (controllerFolder == null) {
     logger.info("$controllerFolderName Folder does not exist so creating")
-    controllerFolder = Jenkins.instance.createProject(Folder.class, controllerFolderName);
+    controllerFolder = workshopFolder.createProject(Folder.class, controllerFolderName);
 }
 logger.info("controllerFolderName is ${controllerFolderName}")
 String controllerDefinitionYaml = """
