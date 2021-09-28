@@ -72,7 +72,7 @@ if (existingController != null) {
   return
 } else {
     //item with controller name does not exist in target folder
-    createController(controllerName, controllerFolderName, controllerDefinition)
+    createController(controllerName, controllerFolderName, controllerDefinition, workshopFolder)
 }
 sleep(2500)
 logger.info("Finished with controller '${controllerName}'.\n")
