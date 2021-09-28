@@ -83,7 +83,7 @@ logger.info("Finished with controller '${controllerName}'.\n")
 // only function definitions below here
 //
 //
-private void createController(String controllerName, String controllerFolderName, def controllerDefinition) {
+private void createController(String controllerName, String controllerFolderName, def controllerDefinition, def workshopFolder) {
   Logger logger = Logger.getLogger("oc-create-update-managed-controller")
   logger.info "controller '${controllerName}' does not exist yet. Creating it now."
 
@@ -92,7 +92,7 @@ private void createController(String controllerName, String controllerFolderName
       configuration["${k}"] = v
   }
   
-  def controllerFolder = Jenkins.instance.getItem(controllerFolderName) 
+  def controllerFolder = workshopFolder.getItem(controllerFolderName) 
   ManagedMaster controller = controllerFolder.createProject(ManagedMaster.class, controllerName)
   controller.setConfiguration(configuration)
   controller.properties.replace(new ConnectedMasterLicenseServerProperty(null))
