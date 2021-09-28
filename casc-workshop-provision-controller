@@ -19,7 +19,7 @@ pipeline {
         GITHUB_USER = event.github.user.toString().toLowerCase()
         CONTROLLER_FOLDER = GITHUB_ORGANIZATION.toLowerCase()
         BUNDLE_ID = "${CONTROLLER_FOLDER}-${GITHUB_REPOSITORY}"
-        AVAILABILITY_PATTERN = "${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}"
+        AVAILABILITY_PATTERN = "cloudbees-ci-casc-workshop/${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}"
       }
       when {
         triggeredBy 'EventTriggerCause'
