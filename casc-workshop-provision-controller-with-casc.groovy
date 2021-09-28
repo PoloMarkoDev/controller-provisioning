@@ -19,8 +19,11 @@ String gitHubOrganization = this.args[0]
 String gitHubUser = this.args[1]
 String controllerName = this.args[2] 
 
+String gitHubApp = "cloudbees-ci-casc-workshop"
+def workshopFolder = Jenkins.instance.getItem(gitHubApp)
+
 String controllerFolderName = this.args[3]
-def controllerFolder = Jenkins.instance.getItem(controllerFolderName)
+def controllerFolder = workshopFolder.getItem(controllerFolderName)
 if (controllerFolder == null) {
     logger.info("$controllerFolderName Folder does not exist so creating")
     controllerFolder = Jenkins.instance.createProject(Folder.class, controllerFolderName);
@@ -31,6 +34,7 @@ provisioning:
   cpus: 1
   disk: 20
   memory: 4000
+  domain: "${controllerFolderName}-${controllerName}"
   yaml: |
     kind: "StatefulSet"
     spec:
