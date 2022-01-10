@@ -11,7 +11,11 @@ pipeline {
   }
   stages {
     stage('Provision Managed Controller') {
-      agent  { label 'default-jnlp' }
+      agent {
+        kubernetes {
+          yaml libraryResource ('podtemplates/kubectl.yml')
+        }
+      }
       environment {
         ADMIN_CLI_TOKEN = credentials('admin-cli-token')
         GITHUB_ORGANIZATION = event.github.organization.toString().replaceAll(" ", "-")
@@ -26,11 +30,17 @@ pipeline {
         environment name: 'PUBLISHED_SECRET', value: PROVISION_SECRET
       }
       steps {
+        sh "rm -rf ./${BUNDLE_ID} || true"
+        sh "mkdir -p ${BUNDLE_ID}"
+        sh "git clone https://github.com/${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}.git ${BUNDLE_ID}"
+      
+        container('kubectl') {
+          sh "kubectl cp --namespace cbci ${BUNDLE_ID} cjoc-0:/var/jenkins_home/jcasc-bundles-store/ -c jenkins"
+        }
         sh '''
-          curl -O http://cjoc/cjoc/jnlpJars/jenkins-cli.jar
-          alias cli='java -jar jenkins-cli.jar -s http://cjoc/cjoc/ -webSocket -auth $ADMIN_CLI_TOKEN_USR:$ADMIN_CLI_TOKEN_PSW'
-          cli casc-bundle-set-availability-pattern --bundle-id $BUNDLE_ID --availability-pattern $AVAILABILITY_PATTERN
-          cli groovy =<casc-workshop-provision-controller-with-casc.groovy $GITHUB_ORGANIZATION $GITHUB_USER $GITHUB_REPOSITORY $CONTROLLER_FOLDER
+          curl --user "$ADMIN_CLI_TOKEN_USR:$ADMIN_CLI_TOKEN_PSW" -XPOST \
+            http://cjoc/cjoc/casc-items/create-items?path=/cloudbees-ci-casc-workshop \
+            --data-binary @./$BUNDLE_ID/controller.yaml -H 'Content-Type:text/yaml'
         '''
       }
     }
