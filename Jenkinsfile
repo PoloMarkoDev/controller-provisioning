@@ -2,8 +2,8 @@ def event = currentBuild.getBuildCauses()[0].event
 pipeline {
   agent none
   environment {
-    PROVISION_SECRET = credentials('casc-workshop-controller-provision-secret')
-    PUBLISHED_SECRET = event.secret.toString()
+    OPS_PROVISION_SECRET = credentials('casc-workshop-controller-provision-secret')
+    CONTROLLER_PROVISION_SECRET = event.secret.toString()
   }
   options { timeout(time: 10, unit: 'MINUTES') }
   triggers {
@@ -27,7 +27,7 @@ pipeline {
       }
       when {
         triggeredBy 'EventTriggerCause'
-        environment name: 'PUBLISHED_SECRET', value: PROVISION_SECRET
+        environment name: 'CONTROLLER_PROVISION_SECRET', value: OPS_PROVISION_SECRET
       }
       steps {
         sh "rm -rf ./${BUNDLE_ID} || true"
