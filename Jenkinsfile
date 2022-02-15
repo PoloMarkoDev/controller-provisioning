@@ -24,7 +24,7 @@ pipeline {
         GITHUB_USER = event.github.user.toString().toLowerCase()
         CONTROLLER_FOLDER = GITHUB_ORGANIZATION.toLowerCase()
         BUNDLE_ID = "${CONTROLLER_FOLDER}-${GITHUB_REPOSITORY}"
-        AVAILABILITY_PATTERN = "cloudbees-ci-casc-workshop/${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}"
+        AVAILABILITY_PATTERN = "staging-cloudbees-ci-casc-workshop/${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}"
       }
       when {
         triggeredBy 'EventTriggerCause'
@@ -40,7 +40,7 @@ pipeline {
         }
         sh '''
           curl --user "$ADMIN_CLI_TOKEN_USR:$ADMIN_CLI_TOKEN_PSW" -XPOST \
-            http://cjoc/cjoc/casc-items/create-items?path=/cloudbees-ci-casc-workshop \
+            http://cjoc/cjoc/casc-items/create-items?path=/staging-cloudbees-ci-casc-workshop \
             --data-binary @./$BUNDLE_ID/controller.yaml -H 'Content-Type:text/yaml'
         '''
       }
