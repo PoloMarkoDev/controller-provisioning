@@ -30,7 +30,7 @@ pipeline {
         triggeredBy 'EventTriggerCause'
         environment name: 'CONTROLLER_PROVISION_SECRET', value: OPS_PROVISION_SECRET
         expression {  // there are changes in some-directory/...
-          sh(returnStatus: true, script: 'git diff  origin/master --name-only | grep --quiet "^controller.yaml"') == 0
+          sh(returnStatus: true, script: 'git diff  origin/main --name-only | grep --quiet "^controller.yaml"') == 0
         }
       }
       steps {
