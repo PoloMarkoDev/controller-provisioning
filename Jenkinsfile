@@ -31,14 +31,28 @@ pipeline {
         environment name: 'CONTROLLER_PROVISION_SECRET', value: OPS_PROVISION_SECRET
       }
       steps {
-        sh "rm -rf ./${BUNDLE_ID} || true"
-        sh "mkdir -p ${BUNDLE_ID}"
-        sh "git clone https://github.com/${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}.git ${BUNDLE_ID}"
+        sh """
+          rm -rf ./checkout || true
+          mkdir -p checkout
+          cd checkout
+          rm -rf ./${BUNDLE_ID} || true
+          mkdir -p ${BUNDLE_ID}
+          git clone https://github.com/${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}.git checkout
+          find -name '*.yaml' | xargs cp --parents -t ${BUNDLE_ID}
+          rm ${BUNDLE_ID}/controller.yaml || true"
+        """
       
         container('kubectl') {
-          sh "kubectl cp --namespace cbci ${BUNDLE_ID} cjoc-0:/var/jenkins_home/jcasc-bundles-store/ -c jenkins"
+          sh "kubectl cp --namespace cbci ./checkout/${BUNDLE_ID} cjoc-0:/var/jenkins_home/jcasc-bundles-store/ -c jenkins"
         }
-        sh '''
+        waitUntil {
+            script {
+              def status = sh script: '''curl -s -o /dev/null -w '%{http_code}' --user "$ADMIN_CLI_TOKEN_USR:$ADMIN_CLI_TOKEN_PSW" -XPOST http://cjoc/cjoc/casc-bundle/validate-uploaded-bundle?bundleId=${BUNDLE_ID}''', returnStdout: true
+              echo "returned status: ${status}"
+              return (status=="200")
+            }
+          }
+          sh '''
           curl --user "$ADMIN_CLI_TOKEN_USR:$ADMIN_CLI_TOKEN_PSW" -XPOST \
             http://cjoc/cjoc/casc-items/create-items?path=/cloudbees-ci-casc-workshop \
             --data-binary @./$BUNDLE_ID/controller.yaml -H 'Content-Type:text/yaml'
