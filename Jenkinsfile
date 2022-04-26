@@ -39,7 +39,7 @@ pipeline {
           mkdir -p ${BUNDLE_ID}
           git clone https://github.com/${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}.git checkout
           find -name '*.yaml' | xargs cp --parents -t ${BUNDLE_ID}
-          rm ${BUNDLE_ID}/controller.yaml || true
+          mv ${BUNDLE_ID}/controller.yaml ../.. || true
         """
       
         container('kubectl') {
