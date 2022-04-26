@@ -32,10 +32,10 @@ pipeline {
       }
       steps {
         sh """
-          rm -rf ./checkout || true
-          mkdir -p checkout
           rm -rf ./${BUNDLE_ID} || true
+          rm -rf ./checkout || true
           mkdir -p ${BUNDLE_ID}
+          mkdir -p checkout
           git clone https://github.com/${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}.git checkout
           dir('checkout') {
             sh "mv ./controller.yaml .. || true"
