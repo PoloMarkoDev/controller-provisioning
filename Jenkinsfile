@@ -34,16 +34,18 @@ pipeline {
         sh """
           rm -rf ./checkout || true
           mkdir -p checkout
-          cd checkout
           rm -rf ./${BUNDLE_ID} || true
           mkdir -p ${BUNDLE_ID}
           git clone https://github.com/${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}.git checkout
-          find -name '*.yaml' | xargs cp --parents -t ${BUNDLE_ID}
-          mv ${BUNDLE_ID}/controller.yaml ../.. || true
+          dir('checkout') {
+            sh "mv ./controller.yaml .. || true"
+            sh "cp --parents `find -name \\*.yaml*` ../${BUNDLE_ID}/"
+          }
         """
       
         container('kubectl') {
-          sh "kubectl cp --namespace cbci ./checkout/${BUNDLE_ID} cjoc-0:/var/jenkins_home/jcasc-bundles-store/ -c jenkins"
+          sh "ls -la ${BUNDLE_ID}"
+          sh "kubectl cp --namespace cbci ${BUNDLE_ID} cjoc-0:/var/jenkins_home/jcasc-bundles-store/ -c jenkins"
         }
         waitUntil {
             script {
