@@ -38,7 +38,7 @@ pipeline {
           sh "mkdir -p checkout"
           sh "git clone https://github.com/${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}.git checkout"
           dir('checkout') {
-            sh "mv -rf ./controller.yaml .. || true"
+            sh "mv ./controller.yaml .. || true"
             sh "cp --parents `find -name \\*.yaml*` ../${BUNDLE_ID}/"
           }
           sh "ls -la ${BUNDLE_ID}"
@@ -54,7 +54,7 @@ pipeline {
           sh '''
           curl --user "$ADMIN_CLI_TOKEN_USR:$ADMIN_CLI_TOKEN_PSW" -XPOST \
             http://cjoc/cjoc/casc-items/create-items?path=/cloudbees-ci-casc-workshop \
-            --data-binary @./$BUNDLE_ID/controller.yaml -H 'Content-Type:text/yaml'
+            --data-binary @./controller.yaml -H 'Content-Type:text/yaml'
         '''
       }
     }
