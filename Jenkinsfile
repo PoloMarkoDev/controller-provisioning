@@ -45,7 +45,7 @@ pipeline {
           sh "kubectl cp --namespace cbci ${BUNDLE_ID} cjoc-0:/var/jenkins_home/jcasc-bundles-store/ -c jenkins"
         }
         sh '''
-          curl --user "$JENKINS_CLI_USR:$JENKINS_CLI_PSW" -XPOST \
+          curl --user "$ADMIN_CLI_TOKEN_USR:$ADMIN_CLI_TOKEN_PSW" -XPOST \
             http://cjoc/cjoc/load-casc-bundles/checkout
 
           curl --user "$ADMIN_CLI_TOKEN_USR:$ADMIN_CLI_TOKEN_PSW" -XPOST \
