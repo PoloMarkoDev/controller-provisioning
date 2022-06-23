@@ -39,10 +39,9 @@ pipeline {
             mkdir -p checkout
             git clone https://github.com/${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}.git checkout
           '''
-          dir('checkout') {
+          dir('checkout/bundle') {
             sh '''
-              mv ./controller.yaml .. || true
-              cp --parents `find -name \\*.yaml*` ../${BUNDLE_ID}/
+              cp --parents `find -name \\*.yaml*` ../../${BUNDLE_ID}//
             '''
           }
           sh '''
